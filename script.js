@@ -7,6 +7,11 @@ date.textContent = time();
 // event listeners
 playBtn.addEventListener("click",play);
 guessBtn.addEventListener("click",makeGuess);
+nameBtn.addEventListener("click",)
+
+nameInput = document.getElementById("nameInput").innerHTML;
+
+
 
 function play(){
     score = 0; // sets score to 0 every new game
@@ -74,6 +79,85 @@ function updateScore(){
 
 function time(){
     let d=new Date();
-    // concatenate a string with all the date info
-    return d;
+    day=d.getDay();
+    if(day==0){
+        day="Sunday"
+    }
+    else if(day==1){
+        day="Monday"
+    }
+    else if(day==2){
+        day="Tuesday"
+    }
+    else if(day==3){
+        day="Wednesday"
+    }
+    else if(day==4){
+        day="Thursday"
+    }
+    else if(day==5){
+        day="Friday"
+    }
+    else{
+        day="Saturday"
+    }
+
+    month=d.getMonth();
+    if(month==0){
+        month="January"
+    }
+    else if(month==1){
+        month="February"
+    }
+    else if(month==2){
+        month="March"
+    }
+    else if(month==3){
+        month="April"
+    }
+    else if(month==4){
+        month="May"
+    }
+    else if(month==5){
+        month="June"
+    }
+    else if(month==6){
+        month="July"
+    }
+    else if(month==7){
+        month="August"
+    }
+    else if(month==8){
+        month="September"
+    }
+    else if(month==9){
+        month="October"
+    }
+    else if(month==10){
+        month="November"
+    }
+    else{
+        month="December"
+    }
+
+    currentDate=d.getDate();
+    if(currentDate==1){
+        currentDate+="st"
+    }
+    else if(currentDate==2){
+        currentDate+="nd"
+    }
+    else if(currentDate==3){
+        currentDate+="rd"
+    }
+    else{
+        currentDate+="th"
+    }
+
+    year=d.getFullYear();
+
+    currentTime=d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+    
+    calendar = "Today is "+day+", "+month+" "+currentDate+", "+year+". The time is "+currentTime+".";
+    return calendar;
 }
