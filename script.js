@@ -54,6 +54,13 @@ function makeGuess(){
 }
 }
 
+function giveUpGame(){
+    msg.textContent="You gave up. The answer was "+answer+"."
+    score=level;
+    updateScore();
+    reset();
+}
+
 function reset(){
     guessBtn.disabled = true;
     guess.disabled = true;
@@ -82,14 +89,9 @@ function updateScore(){
     avgScore.textContent="Average Score: "+avg.toFixed(2);
 }
 
-function giveUpGame(){
-    msg.textContent="You gave up. The answer was "+answer+"."
-    // finish
-}
-
 function time(){
-    let d=new Date();
-    day=d.getDay();
+    const d=new Date();
+    let day=d.getDay();
     if(day==0){
         day="Sunday"
     }
@@ -164,13 +166,13 @@ function time(){
         currentDate+="th"
     }
 
-    year=d.getFullYear();
-    minutes=d.getMinutes();
+    let year=d.getFullYear();
+    let minutes=d.getMinutes();
     if(minutes<10){
         minutes="0"+minutes;
     }
 
-    seconds=d.getSeconds();
+    const seconds=d.getSeconds();
     if(seconds<10){
         seconds="0"+seconds;
     }
@@ -180,3 +182,5 @@ function time(){
     calendar = "Today is "+day+", "+month+" "+currentDate+", "+year+". The time is "+currentTime+".";
     return calendar;
 }
+time();
+setInterval(time, 1000);
