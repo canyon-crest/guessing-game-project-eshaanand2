@@ -7,16 +7,21 @@ date.textContent = time();
 // event listeners
 playBtn.addEventListener("click",play);
 guessBtn.addEventListener("click",makeGuess);
-nameBtn.addEventListener("click",)
+nameBtn.addEventListener("click",greeting)
+giveUp.addEventListener("click", giveUpGame)
 
-nameInput = document.getElementById("nameInput").innerHTML;
-
-
+function greeting(){
+    nameInput = document.getElementById("nameInput").value;
+    capName = nameInput.charAt(0).toUpperCase()+nameInput.slice(1).toLowerCase();
+    let welcome = "Welcome to the guessing game, "+capName+"!";
+    nameOutput.textContent=welcome;
+}
 
 function play(){
     score = 0; // sets score to 0 every new game
     playBtn.disabled = true;
     guessBtn.disabled = false;
+    giveUp.disabled = false;
     guess.disabled = false;
     for(let i=0; i<levelArr.length; i++){
         if(levelArr[i].checked){
@@ -75,6 +80,11 @@ function updateScore(){
     }
     let avg=sum/scoreArr.length;
     avgScore.textContent="Average Score: "+avg.toFixed(2);
+}
+
+function giveUpGame(){
+    msg.textContent="You gave up. The answer was "+answer+"."
+    // finish
 }
 
 function time(){
@@ -141,13 +151,13 @@ function time(){
     }
 
     currentDate=d.getDate();
-    if(currentDate==1){
+    if(currentDate%10==1 & currentDate!=11){
         currentDate+="st"
     }
-    else if(currentDate==2){
+    else if(currentDate%10==2 & currentDate!=12){
         currentDate+="nd"
     }
-    else if(currentDate==3){
+    else if(currentDate%10==3 & currentDate!=13){
         currentDate+="rd"
     }
     else{
@@ -155,8 +165,17 @@ function time(){
     }
 
     year=d.getFullYear();
+    minutes=d.getMinutes();
+    if(minutes<10){
+        minutes="0"+minutes;
+    }
 
-    currentTime=d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+    seconds=d.getSeconds();
+    if(seconds<10){
+        seconds="0"+seconds;
+    }
+
+    currentTime=d.getHours()+":"+minutes+":"+seconds;
     
     calendar = "Today is "+day+", "+month+" "+currentDate+", "+year+". The time is "+currentTime+".";
     return calendar;
