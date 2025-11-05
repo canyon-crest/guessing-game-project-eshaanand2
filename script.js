@@ -180,7 +180,10 @@ function time(){
     currentTime=d.getHours()+":"+minutes+":"+seconds;
     
     calendar = "Today is "+day+", "+month+" "+currentDate+", "+year+". The time is "+currentTime+".";
-    return calendar;
+    date.textContent=calendar;
 }
-time();
 setInterval(time, 1000);
+
+function timer(){
+    
+}
