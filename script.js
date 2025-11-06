@@ -3,6 +3,7 @@ let level, answer, score;
 const levelArr = document.getElementsByName("level");
 const scoreArr = [];
 date.textContent = time();
+showTimer.textContent = displayTimer();
 
 // event listeners
 playBtn.addEventListener("click",play);
@@ -11,44 +12,45 @@ nameBtn.addEventListener("click",greeting)
 giveUp.addEventListener("click", giveUpGame)
 
 function greeting(){
-    nameInput = document.getElementById("nameInput").value;
-    capName = nameInput.charAt(0).toUpperCase()+nameInput.slice(1).toLowerCase();
-    let welcome = "Welcome to the guessing game, "+capName+"!";
+    nameInput=document.getElementById("nameInput").value;
+    capName=nameInput.charAt(0).toUpperCase()+nameInput.slice(1).toLowerCase();
+    let welcome="Welcome to the guessing game, "+capName+"!";
     nameOutput.textContent=welcome;
 }
 
 function play(){
-    score = 0; // sets score to 0 every new game
-    playBtn.disabled = true;
-    guessBtn.disabled = false;
-    giveUp.disabled = false;
-    guess.disabled = false;
+    score=0;
+    playBtn.disabled=true;
+    guessBtn.disabled=false;
+    giveUp.disabled=false;
+    guess.disabled=false;
+    let gameStart = d.now();
     for(let i=0; i<levelArr.length; i++){
         if(levelArr[i].checked){
-            level = levelArr[i].value;
+            level=levelArr[i].value;
         }
-        levelArr[i].disabled = true;
+        levelArr[i].disabled=true;
   }
-    msg.textContent = "Guess a number from 1-" + level;
-    answer = Math.floor(Math.random()*level)+1;
-    guess.placeholder = answer;
+    msg.textContent="Guess a number from 1-"+level;
+    answer=Math.floor(Math.random()*level)+1;
+    guess.placeholder=answer;
 }
 
 function makeGuess(){
-    let userGuess = parseInt(guess.value);
+    let userGuess=parseInt(guess.value);
     if(isNaN(userGuess) || userGuess < 1 || userGuess > level){
-        msg.textContent = "Enter a VALID #1-" + level;
+        msg.textContent="Enter a VALID #1-" + level;
         return;
     }
-    score ++; // valid guess add 1 to score
+    score ++;
     if(userGuess < answer){
-        msg.textContent = "Too low, try again";
+        msg.textContent="Too low, try again";
     }
     else if(userGuess > answer){
-        msg.textContent = "Too high, try again";
+        msg.textContent="Too high, try again";
     }
     else{
-        msg.textContent = "You got it! It took you " + score + " tries. Press play to play again";
+        msg.textContent="You got it! It took you " + score + " tries. Press play to play again";
         updateScore();
         reset();
 }
@@ -62,11 +64,11 @@ function giveUpGame(){
 }
 
 function reset(){
-    guessBtn.disabled = true;
-    guess.disabled = true;
-    guess.value = "";
-    guess.placeholder = "";
-    playBtn.disabled = false;
+    guessBtn.disabled=true;
+    guess.disabled=true;
+    guess.value="";
+    guess.placeholder="";
+    playBtn.disabled=false;
     for(let i=0; i<levelArr.length; i++){
         levelArr[i].disabled = false;
     }
@@ -78,7 +80,7 @@ function updateScore(){
     let lb=document.getElementsByName("leaderboard");
 
     wins.textContent="Total wins: "+scoreArr.length;
-    let sum = 0;
+    let sum=0;
     for(let i=0;i<scoreArr.length;i++){
         sum+=scoreArr[i];
         if(i<lb.length){
@@ -90,7 +92,7 @@ function updateScore(){
 }
 
 function time(){
-    const d=new Date();
+    let d=new Date();
     let day=d.getDay();
     if(day==0){
         day="Sunday"
@@ -180,10 +182,19 @@ function time(){
     currentTime=d.getHours()+":"+minutes+":"+seconds;
     
     calendar = "Today is "+day+", "+month+" "+currentDate+", "+year+". The time is "+currentTime+".";
-    date.textContent=calendar;
+    return calendar;
 }
 setInterval(time, 1000);
 
-function timer(){
-    
-}
+// function displayTimer(){
+//     const currentGameTime=d.now();
+//     let elapsedTime=currentGameTime - gameStart;
+//     let gameSec=Math.floor(elapsedTime/1000);
+//     let gameMin=Math.floor(gameSec/60);
+//     let displayedSec=gameSec%60;
+//     if(displayedSec<10){
+//         displayedSec = "0"+displayedSec;
+//     }
+//     timerDisplay="Time elapsed: "+gameMin+":"+displayedSec;
+//     return timerDisplay;
+// }
