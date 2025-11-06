@@ -1,9 +1,9 @@
 // global variables
-let level, answer, score;
+let level, answer, score, gameStart, timerInterval, gameTime, gameSec;
 const levelArr = document.getElementsByName("level");
 const scoreArr = [];
+const timeArr = [];
 date.textContent = time();
-showTimer.textContent = displayTimer();
 
 // event listeners
 playBtn.addEventListener("click",play);
@@ -24,7 +24,8 @@ function play(){
     guessBtn.disabled=false;
     giveUp.disabled=false;
     guess.disabled=false;
-    let gameStart = d.now();
+    gameStart = Date.now();
+    displayTimer();
     for(let i=0; i<levelArr.length; i++){
         if(levelArr[i].checked){
             level=levelArr[i].value;
@@ -33,16 +34,29 @@ function play(){
   }
     msg.textContent="Guess a number from 1-"+level;
     answer=Math.floor(Math.random()*level)+1;
-    guess.placeholder=answer;
+    // guess.placeholder=answer;
 }
 
 function makeGuess(){
+    let scoreMsg;
     let userGuess=parseInt(guess.value);
     if(isNaN(userGuess) || userGuess < 1 || userGuess > level){
         msg.textContent="Enter a VALID #1-" + level;
         return;
     }
-    score ++;
+    score++;
+    if(score==1){
+        scoreMsg="That's a great score!"
+    }
+    else if(score<5){
+        scoreMsg="That's a good score."
+    }
+    else if(score<10){
+        scoreMsg="That's an okay score."
+    }
+    else{
+        scoreMsg="Not the best score."
+    }
     if(userGuess < answer){
         msg.textContent="Too low, try again";
     }
@@ -50,10 +64,31 @@ function makeGuess(){
         msg.textContent="Too high, try again";
     }
     else{
-        msg.textContent="You got it! It took you " + score + " tries. Press play to play again";
+        msg.textContent="You got it! It took you " + score + " tries. "+scoreMsg+" Press play to play again.";
         updateScore();
-        reset();
-}
+        reset(); 
+    }
+    let diff=Math.abs(userGuess-answer);
+    if(userGuess!=answer){
+        if(diff<5){
+            msg.textContent+=". You are hot!"
+        }
+        else if((level==3||level==10) & diff>5){
+            msg.textContent+=". You are cold."
+        }
+        else if(diff<10){
+            msg.textContent+=". You are very warm!"
+        }
+        else if(diff<25){
+            msg.textContent+=". You are warm!"
+        }
+        else if(diff<40){
+            msg.textContent+=". You are a little warm."
+        }
+        else{
+            msg.textContent+=". You are cold."
+        }
+    }
 }
 
 function giveUpGame(){
@@ -63,12 +98,31 @@ function giveUpGame(){
     reset();
 }
 
+function displayTimer(){
+    clearInterval(timerInterval);
+    timerInterval=setInterval(()=>{
+        const currentGameTime=Date.now();
+        const elapsedTime=currentGameTime - gameStart;
+        
+        gameSec=Math.floor(elapsedTime/1000);
+        const gameMin=Math.floor(gameSec/60);
+        let displayedSec=gameSec%60;
+        if(displayedSec<10){
+            displayedSec = "0"+displayedSec;
+        }
+        gameTime=gameMin+":"+displayedSec;
+        document.getElementById("showTimer").textContent="Time Elapsed: "+gameTime;
+    }, 1000)
+}
+
 function reset(){
     guessBtn.disabled=true;
     guess.disabled=true;
     guess.value="";
     guess.placeholder="";
     playBtn.disabled=false;
+    clearInterval(timerInterval);
+    document.getElementById("showTimer").textContent="";
     for(let i=0; i<levelArr.length; i++){
         levelArr[i].disabled = false;
     }
@@ -78,90 +132,56 @@ function updateScore(){
     scoreArr.push(score);
     scoreArr.sort((a,b)=>a-b);
     let lb=document.getElementsByName("leaderboard");
-
     wins.textContent="Total wins: "+scoreArr.length;
-    let sum=0;
+    let sumWins=0;
     for(let i=0;i<scoreArr.length;i++){
-        sum+=scoreArr[i];
+        sumWins+=scoreArr[i];
         if(i<lb.length){
             lb[i].textContent=scoreArr[i];
         }
     }
-    let avg=sum/scoreArr.length;
-    avgScore.textContent="Average Score: "+avg.toFixed(2);
+    let avgSc=sumWins/scoreArr.length;
+    avgScore.textContent="Average Score: "+avgSc.toFixed(2);
+
+    timeArr.push(gameSec);
+    timeArr.sort((a,b)=>a-b);
+    let fastGameT=timeArr[0];
+    let fastGameMin=Math.floor(fastGameT/60);
+    let fastGameSec=Math.floor(fastGameT%60);
+    if(fastGameSec<10){
+        fastGameSec="0"+fastGameSec;
+    }
+    fastestGame.textContent="Fastest Game: "+fastGameMin+":"+fastGameSec;
+
+    let sumT=0;
+    for(let i=0;i<timeArr.length;i++){
+        sumT+=timeArr[i];
+    }
+    let avgT=sumT/timeArr.length;
+    let avgMin=Math.floor(avgT/60)
+    let avgSec=Math.floor(avgT%60)
+    if(avgSec<10){
+        avgSec="0"+avgSec;
+    }
+    avgTime.textContent="Average Time per Game: "+avgMin+":"+avgSec;
 }
 
 function time(){
     let d=new Date();
-    let day=d.getDay();
-    if(day==0){
-        day="Sunday"
-    }
-    else if(day==1){
-        day="Monday"
-    }
-    else if(day==2){
-        day="Tuesday"
-    }
-    else if(day==3){
-        day="Wednesday"
-    }
-    else if(day==4){
-        day="Thursday"
-    }
-    else if(day==5){
-        day="Friday"
-    }
-    else{
-        day="Saturday"
-    }
+    const daysOfWeek=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+    let day=daysOfWeek[d.getDay()];
 
-    month=d.getMonth();
-    if(month==0){
-        month="January"
-    }
-    else if(month==1){
-        month="February"
-    }
-    else if(month==2){
-        month="March"
-    }
-    else if(month==3){
-        month="April"
-    }
-    else if(month==4){
-        month="May"
-    }
-    else if(month==5){
-        month="June"
-    }
-    else if(month==6){
-        month="July"
-    }
-    else if(month==7){
-        month="August"
-    }
-    else if(month==8){
-        month="September"
-    }
-    else if(month==9){
-        month="October"
-    }
-    else if(month==10){
-        month="November"
-    }
-    else{
-        month="December"
-    }
-
+    const monthsOfYear=["January","February","March","April","May","June","July","August","September","October","November","December"]
+    month=monthsOfYear[d.getMonth()];
+    
     currentDate=d.getDate();
-    if(currentDate%10==1 & currentDate!=11){
+    if(currentDate%10==1 && currentDate!=11){
         currentDate+="st"
     }
-    else if(currentDate%10==2 & currentDate!=12){
+    else if(currentDate%10==2 && currentDate!=12){
         currentDate+="nd"
     }
-    else if(currentDate%10==3 & currentDate!=13){
+    else if(currentDate%10==3 && currentDate!=13){
         currentDate+="rd"
     }
     else{
@@ -169,12 +189,13 @@ function time(){
     }
 
     let year=d.getFullYear();
+    
     let minutes=d.getMinutes();
     if(minutes<10){
         minutes="0"+minutes;
     }
-
-    const seconds=d.getSeconds();
+    
+    let seconds=d.getSeconds();
     if(seconds<10){
         seconds="0"+seconds;
     }
@@ -182,19 +203,7 @@ function time(){
     currentTime=d.getHours()+":"+minutes+":"+seconds;
     
     calendar = "Today is "+day+", "+month+" "+currentDate+", "+year+". The time is "+currentTime+".";
-    return calendar;
+    date.textContent=calendar;
 }
+time()
 setInterval(time, 1000);
-
-// function displayTimer(){
-//     const currentGameTime=d.now();
-//     let elapsedTime=currentGameTime - gameStart;
-//     let gameSec=Math.floor(elapsedTime/1000);
-//     let gameMin=Math.floor(gameSec/60);
-//     let displayedSec=gameSec%60;
-//     if(displayedSec<10){
-//         displayedSec = "0"+displayedSec;
-//     }
-//     timerDisplay="Time elapsed: "+gameMin+":"+displayedSec;
-//     return timerDisplay;
-// }
