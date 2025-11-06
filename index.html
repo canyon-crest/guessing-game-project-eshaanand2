@@ -3,27 +3,33 @@
   <head>
     <title>JavaScript Number Guessing Game</title>
     <script src="script.js" defer></script>
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <p id="date"></p>
+    <h1>Guessing Game</h1>
+    <h2 id="date"></h2>
 
     <h3>Name</h3>
-    <input id="nameInput" placeholder="Type your name">
-    <button id="nameBtn">Enter</button>
+    
+      <input id="nameInput" placeholder="Type your name">
+      <button id="nameBtn">Enter</button>
+    
     <p id="nameOutput"></p>
 
     <h3>Level</h3>
-    <input type="radio" name="level" id="e" value="3" checked><label for="e">Easy</label>
-    <input type="radio" name="level" id="m" value="10"><label for="m">Medium</label>
-    <input type="radio" name="level" id="h" value="100"><label for="h">Hard</label>
+    <div class="levelCont">
+      <label for="e"><input type="radio" name="level" id="e" value="3" checked>Easy</label>
+      <label for="m"><input type="radio" name="level" id="m" value="10">Medium</label>
+      <label for="h"><input type="radio" name="level" id="h" value="100">Hard</label>
+      <button id="playBtn">Play</button>
+    </div>
 
-    <button id="playBtn">Play</button>
-
-    <h3 id="msg">Select a Level</h3>
+    <h4 id="msg">Select a Level</h4>
     <input type="text" id="guess">
     <button id="guessBtn" disabled>Guess</button>
     <button id="giveUp" disabled>Give Up</button>
-    <p id="showTimer">Time Elapsed: 0:00</p>
+    <p id="showGameTimer">Time Elapsed for Game: 0:00</p>
+    <p id="showRoundTimer">Time Elapsed for Round: 0:00</p>
 
     <h3>Stats</h3>
     <p id="wins">Total Wins: 0</p>

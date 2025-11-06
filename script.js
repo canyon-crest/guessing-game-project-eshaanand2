@@ -1,5 +1,5 @@
 // global variables
-let level, answer, score, gameStart, timerInterval, gameTime, gameSec;
+let level, answer, score, gameStart, roundTimerInterval, gameTimerInterval, gameTime, gameSec;
 const levelArr = document.getElementsByName("level");
 const scoreArr = [];
 const timeArr = [];
@@ -25,7 +25,8 @@ function play(){
     giveUp.disabled=false;
     guess.disabled=false;
     gameStart = Date.now();
-    displayTimer();
+    displayRoundTimer();
+    displayGameTimer();
     for(let i=0; i<levelArr.length; i++){
         if(levelArr[i].checked){
             level=levelArr[i].value;
@@ -98,9 +99,9 @@ function giveUpGame(){
     reset();
 }
 
-function displayTimer(){
-    clearInterval(timerInterval);
-    timerInterval=setInterval(()=>{
+function displayRoundTimer(){
+    clearInterval(roundTimerInterval);
+    roundTimerInterval=setInterval(()=>{
         const currentGameTime=Date.now();
         const elapsedTime=currentGameTime - gameStart;
         
@@ -111,7 +112,27 @@ function displayTimer(){
             displayedSec = "0"+displayedSec;
         }
         gameTime=gameMin+":"+displayedSec;
-        document.getElementById("showTimer").textContent="Time Elapsed: "+gameTime;
+        document.getElementById("showRoundTimer").textContent="Time Elapsed for Round: "+gameTime;
+    }, 1000)
+}
+
+function displayGameTimer(){
+    if(gameTimerInterval){
+        return;
+    }
+    const gameStartTime=Date.now();
+
+    gameTimerInterval=setInterval(()=>{
+        const elapsedTime=Date.now() - gameStartTime;
+
+        gameSec=Math.floor(elapsedTime/1000);
+        const gameMin=Math.floor(gameSec/60);
+        let displayedSec=gameSec%60;
+        if(displayedSec<10){
+            displayedSec = "0"+displayedSec;
+        }
+        gameTime=gameMin+":"+displayedSec;
+        document.getElementById("showGameTimer").textContent="Time Elapsed for Game: "+gameTime;
     }, 1000)
 }
 
@@ -121,8 +142,8 @@ function reset(){
     guess.value="";
     guess.placeholder="";
     playBtn.disabled=false;
-    clearInterval(timerInterval);
-    document.getElementById("showTimer").textContent="";
+    clearInterval(roundTimerInterval);
+    document.getElementById("showRoundTimer").textContent="Time Elapsed for Round: 0:00";
     for(let i=0; i<levelArr.length; i++){
         levelArr[i].disabled = false;
     }
