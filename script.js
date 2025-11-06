@@ -96,7 +96,7 @@ function giveUpGame(){
     msg.textContent="You gave up. The answer was "+answer+"."
     score=level;
     updateScore();
-    reset();
+    setTimeout(reset, 100);
 }
 
 function displayRoundTimer(){
